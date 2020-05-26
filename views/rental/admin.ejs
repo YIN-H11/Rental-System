@@ -1,0 +1,111 @@
+<!-- Admin.ejs -->
+<div class="container">
+
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <% if(session.role=="admin"){ %>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link  " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/rental/create">Create</a>
+                <a class="nav-item nav-link" href="/rental/search">Search</a>
+                <a class="nav-item nav-link active" href="/rental/admin">Admin</a>
+            </div>
+        </div>
+
+        <%} else if(session.role=="client"){%>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="./home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="./search">Search</a>
+                <a class="nav-item nav-link" href="#">./Myrental</a>
+            </div>
+        </div>
+
+        <%} else {%>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="./home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="./search">Search</a>
+
+            </div>
+        </div>
+
+        <%} %>
+        <% if(!session.username){ %>
+        <div>
+            <a class="nav-item" href="/user/login">Sign In</a>
+        </div>
+        <%}else{%>
+        Hi,<%=session.username %>
+        <div>
+            <form action="/user/logout" method="POST">
+                <button type="submit" class="btn btn-light">logout</button>
+            </form>
+        </div>
+        <% } %>
+    </nav>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Real Estate Rental System</h1>
+            <p class="lead">Real Estate Rental Management System is a web-based system to facilitate and finding
+                roomates.</p>
+        </div>
+    </div>
+
+    <!-- admin -->
+    <table class="table">
+        <% rental.forEach( function(model) { %>
+        <tr>
+            <td><%= model.id %></td>
+            <td><%= model.propertytitle %></td>
+            <td><%= model.Estate %></td>
+            <td><a href="/user/occupants/<%= model.id %>">Occupants</a></td>
+            <td><a href="/rental/update/<%= model.id %>">Edit</a></td>
+            <td>
+                <!-- <button type="button" class="btn btn-danger" onclick="deleterental('<%= model.id %>')">Delete</button> -->
+                <form>
+                    <button type="submit" class="btn btn-danger"  onclick="deleterental('<%= model.id %>')" >Delete</button>
+                </form>
+            </td>
+        </tr>
+
+        <% }); %>
+
+    </table>
+
+</div>>
+
+<script>
+
+    async function deleterental(id) {
+
+        var r = confirm("Confirm Delete?");
+
+        if (r) {
+
+            var response = await fetch("/rental/" + id, {
+                method: "DELETE",
+                credentials: 'same-origin',
+            });
+
+            // var html = await response.text();
+            // alert(html);
+            if (response.ok) {
+                var data = await response.json();
+                alert(data.message);
+                window.location = data.url;
+            } else {
+                alert(response.status + ": " + response.statusText);
+            }
+
+        } else {
+            alert("cancelled");
+        }
+
+    };
+
+</script>

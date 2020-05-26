@@ -1,0 +1,196 @@
+<!-- update.ejs -->
+<div class="container">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <% if(session.role=="admin"){ %>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link  " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/rental/create">Create</a>
+                <a class="nav-item nav-link " href="/rental/search">Search</a>
+                <a class="nav-item nav-link active" href="/rental/admin">Admin</a>
+            </div>
+        </div>
+
+        <%} else if(session.role=="client"){%>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link " href="/rental/search">Search</a>
+                <a class="nav-item nav-link" href="#">Myrental</a>
+            </div>
+        </div>
+
+        <%} else {%>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/rental/search">Search</a>
+
+            </div>
+        </div>
+
+        <%} %>
+
+        <% if(!session.username){ %>
+        <div>
+            <a class="nav-item" href="/user/login">Sign In</a>
+        </div>
+        <%}else{%>
+        Hi,<%=session.username %>
+        <div>
+            <form action="/user/logout" method="POST">
+                <button type="submit" class="btn btn-light">logout</button>
+            </form>
+        </div>
+        <% } %>
+    </nav>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Real Estate Rental System</h1>
+            <p class="lead">Real Estate Rental Management System is a web-based system to facilitate and finding
+                roomates.</p>
+        </div>
+    </div>
+
+    <!-- update.ejs -->
+    <form action="/rental/update/<%= rental.id %>" method="POST">
+        <div class="form-row">
+            <!-- 标题 -->
+            <div class="col">
+                <p>property title:</p>
+                <input type="text" class="form-control" name="Rental[propertytitle]"
+                    value="<%= rental.propertytitle %>">
+            </div>
+            <!-- Image URL 连接网页 -->
+            <div class="col">
+                <p>Image URL:</p>
+                <input type="text" class="form-control" name="Rental[ImageURL]" value="<%= rental.ImageURL %>">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <!-- 选择区域 -->
+            <div class="col">
+                <br>
+                <p>Estate:</p>
+                <select type="text" class="custom-select" name="Rental[Estate]" value="<%= rental.Estate %>">
+
+                    <option selected>selec Estate here</option>
+                    <option value="Festival City">Festival City</option>
+                    <option value="Tin Ma Court">Tin Ma Court</option>
+                    <option value="City One Shatin">City One Shatin</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <br>
+                <p>Bedrooms:</p>
+                
+                <input type="number" class="form-control" name="Rental[Bedrooms]" min=0 max=10>
+
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col">
+                <br>
+                <p>Cross Area:</p>
+                <input type="text" class="form-control" name="Rental[CrossArea]" value="<%= rental.CrossArea %>">
+            </div>
+            <!-- Expected Tenants-->
+            <div class="col">
+                <br>
+                <p>Expected Tenants:</p>
+                <select type="text" class="custom-select" id="SET" name="Rental[ExpectedTenants]"
+                    value="<%= rental.ExpectedTenants %>">
+                    <option selected>selec Bedrooms here</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value=">5">>5</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="form-row">
+            <!-- 租金 -->
+            <div class="col">
+                <br>
+                <p>Rent:</p>
+                <input type="number" class="form-control" name="Rental[Rent]" value="<%= rental.Rent %>" min=0
+                    max=30000>
+            </div>
+
+            <div class="col">
+                <br>
+                <div class="form-group">
+                    <input type="checkbox" name="Rental[highlightedProperty]" value="<%=rental.highlightedProperty%>">
+                    <label>highlightedProperty</label>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">submit</button>
+
+            </div>
+        </div>
+
+
+    </form>
+
+   
+
+</div>
+
+<!-- <script>
+
+    async function btn1(id) {
+
+        var r = confirm("Confirm update?");
+       
+        if (r) {
+
+            var response = await fetch("/rental/" + id, {
+                method: "PUT",
+                credentials: 'same-origin',
+            });
+
+            var html = await response.text();
+            alert(html);
+
+        } else {
+            alert("cancelled");
+        }
+
+    };
+
+</script> -->
+
+<!-- <script>
+    async function submitForm(oFormElement) {
+
+        var response = await fetch(oFormElement.action, {
+            method: oFormElement.method,
+            credentials: 'same-origin',
+            body: new FormData(oFormElement),
+        });
+
+        if (response.ok) {
+            var data = await response.text();   // for res.ok() or res.json()
+            alert(data);
+            location.reload(true);
+        } else if (response.status == 401) {
+            var data = await response.text();   // for res.send()
+            alert(data);
+        } else {
+            alert(response.statusText);
+        }
+
+    };
+
+</script> -->

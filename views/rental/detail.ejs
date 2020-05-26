@@ -1,0 +1,347 @@
+<div class="container">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <% if(session.role=="admin"){ %>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link  " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/rental/create">Create</a>
+                <a class="nav-item nav-link" href="/rental/search">Search</a>
+                <a class="nav-item nav-link active" href="/rental/admin">Admin</a>
+            </div>
+        </div>
+
+        <%} else if(session.role=="client"){%>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/rental/search">Search</a>
+                <a class="nav-item nav-link" href="/user/myrental">Myrental</a>
+            </div>
+        </div>
+
+        <%} else {%>
+
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/rental/search">Search</a>
+
+            </div>
+        </div>
+
+        <%} %>
+        <% if(!session.username){ %>
+        <div>
+            <a class="nav-item" href="/user/login">Sign In</a>
+        </div>
+        <%}else{%>
+        Hi,<%=session.username %>
+        <div>
+            <form action="/user/logout" method="POST">
+                <button type="submit" class="btn btn-light">logout</button>
+            </form>
+        </div>
+        <% } %>
+    </nav>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Real Estate Rental System</h1>
+            <p class="lead">Real Estate Rental Management System is a web-based system to facilitate and finding
+                roomates.</p>
+        </div>
+    </div>
+
+
+    <!-- detail.ejs -->
+    <%if(session.role=="client"){ %>
+    <div class="card col-xl-6 col-xs-12 px-4">
+        <h4>
+            <%= rental.propertytitle %>
+        </h4>
+        <div class="row no-gutters">
+            <img src="<%= rental.ImageURL %>" class="card-img col-4 pr-4" alt="Responsive image"
+                style="object-fit: cover;height: 146.4px;">
+
+            <div class="col-8">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row ">Estate:<%= rental.Estate %></th>
+
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Gross Area:<%= rental.CrossArea %></th>
+
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Rent:$<%= rental.Rent %></th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bedrooms:$<%= rental.Bedrooms %></th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Expected Tenants:<%= rental.ExpectedTenants %></th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Rentor:<%= rental.rentor %>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row" id="createdTime">Createtime:<div style="display: inline;">
+                                    <%= rental.createdAt %></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row" id="updatedAt">Updatetime:<div style="display: inline;">
+                                    <%= rental.updatedAt %>
+                                </div>
+                            </th>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <div >
+                   
+                        <!-- <form action="/user/:id/supervises/remove/<%= rental.id %>" method="POST">
+                            <button type="submit" class="btn btn-primary" id="mout"> Move out</button>
+                        </form>
+                    -->
+                    <%if(!Rentin){ %>
+                    <!-- <form action="/user/:id/supervises/add/<%= rental.id %>" method="POST" onsubmit="inhouse(this);return false"> -->
+                        <!-- <button type="submit" class="btn btn-primary" id="mout">Move out</button> -->
+                        <button type="submit" class="btn btn-primary" onclick="inhouse()">Move in</button>
+                    <!-- </form> -->
+                    <%} else {%>
+                        <!-- <form action="/user/:id/supervises/remove/<%= rental.id %>" method="POST" onsubmit="outhouse(this);return false"> -->
+                            <!-- <button type="submit" class="btn btn-primary" id="mout">Move out</button> -->
+                            <button type="submit" class="btn btn-primary" onclick="outhouse()">Move out</button>
+                        <!-- </form> -->
+                    <%} %>
+                   
+                    
+                   
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <%} else {%>
+    <div class="card col-xl-6 col-xs-12 px-4">
+        <h4>
+            <%= rental.propertytitle %>
+        </h4>
+        <div class="row no-gutters">
+            <img src="<%= rental.ImageURL %>" class="card-img col-4 pr-4" alt="Responsive image"
+                style="object-fit: cover;height: 146.4px;">
+
+            <div class="col-8">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row ">Estate:<%= rental.Estate %></th>
+
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Gross Area:<%= rental.CrossArea %></th>
+
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Rent:$<%= rental.Rent %></th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bedrooms:<%= rental.Bedrooms %></th>
+                        </tr>
+                        <tr>
+                            <th scope="row">Expected Tenants:<%= rental.ExpectedTenants %></th>
+                        </tr>
+                        <tr>
+                            <th scope="row" id="createdTime">Createtime:<div style="display: inline;">
+                                    <%= rental.createdAt %></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row" id="updatedAt">Updatetime:<div style="display: inline;">
+                                    <%= rental.updatedAt %>
+                                </div>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <% } %>
+</div>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    //window.onload=function()
+    $(document).ready(function () {
+
+        let createdTime = $("#createdTime div").text();
+        let updatedTime = $("#updatedAt div").text();
+        
+        let x = timestampToTime(createdTime);
+        let y = timestampToTime(updatedTime);
+        console.log(x, y);
+        $("#createdTime div").text(x);
+        $("#updatedAt div").text(y);
+
+
+
+    });
+    function timestampToTime(timestamp) {
+        let ti = parseInt(timestamp);
+        var date = new Date(ti);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear();
+        var M = date.getMonth() + 1;
+        M = M < 10 ? ('0' + M) : M;
+        var D = date.getDate();
+        D = D < 10 ? ('0' + D) : D;
+        var h = date.getHours();
+        h = h < 10 ? ('0' + h) : h;
+        var m = date.getMinutes();
+        m = m < 10 ? ('0' + m) : m;
+        var s = date.getSeconds();
+        s = s < 10 ? ('0' + s) : s;
+        var time = Y + '/' + M + '/' + D;
+        return time;
+    }
+
+</script>
+
+<script>
+    async function inhouse() {
+
+        var r = confirm("Co-rent?");
+       
+        if (r) {
+
+        var rentor =  parseInt("<%= rental.rentor %>");
+        var ExpectedTenants = parseInt("<%= rental.ExpectedTenants %>");
+        if(rentor==ExpectedTenants){
+            //alert("There is no room to rent.");
+            return alert("There is no room to rent.");
+            //location.reload();
+        }
+        var rentalid = parseInt("<%= rental.id %>");
+        
+        
+        var userid = parseInt("<%= userid %>");
+       
+        
+        var response = await fetch("/user/" +  userid + "/rental/" + rentalid, {
+            method: "PUT",
+            credentials: 'same-origin',
+            //body: new FormData(oFormElement),
+        });
+
+        if (response.ok) {
+            var data = await response.json();   // for res.ok() or res.json()
+            alert(data.message);
+            window.location = data.url;
+        } else if (response.status == 409) {
+            var data = await response.text();   // for res.send()
+            alert(data);
+        } else {
+            alert(response.statusText);
+        }
+    } else {
+            alert("cancelled");
+        }
+
+    };
+
+</script>
+
+<script>
+    async function outhouse() {
+
+        var r = confirm("Move out?");
+       
+        if (r) {
+
+        
+        var rentalid = parseInt("<%= rental.id %>");
+        
+        
+        var userid = parseInt("<%= userid %>");
+       
+        
+        var response = await fetch("/user/" +  userid + "/rental/" + rentalid, {
+            method: "DELETE",
+            credentials: 'same-origin',
+            //body: new FormData(oFormElement),
+        });
+
+        if (response.ok) {
+            var data = await response.json();   // for res.ok() or res.json()
+            alert(data.message);
+            window.location = data.url;
+        } else if (response.status == 409) {
+            var data = await response.text();   // for res.send()
+            alert(data);
+        } else {
+            alert(response.statusText);
+        }
+    } else {
+            alert("cancelled");
+        }
+
+    };
+
+</script>
+<!-- <script>
+    async function inhouse(oFormElement) {
+
+        var response = await fetch(oFormElement.action, {
+            method: oFormElement.method,
+            credentials: 'same-origin',
+            body: new FormData(oFormElement),
+        });
+
+        if (response.ok) {
+            var data = await response.json();   // for res.ok() or res.json()
+            alert(data.message);
+            window.location = data.url;
+        } else if (response.status == 409) {
+            var data = await response.text();   // for res.send()
+            alert(data);
+        } else {
+            alert(response.statusText);
+        }
+
+    };
+
+</script> -->
+
+<!-- <script>
+    async function outhouse(oFormElement) {
+
+        var response = await fetch(oFormElement.action, {
+            method: oFormElement.method,
+            credentials: 'same-origin',
+            body: new FormData(oFormElement),
+        });
+
+        if (response.ok) {
+            var data = await response.json();   // for res.ok() or res.json()
+            alert(data.message);
+            window.location = data.url;
+        } else if (response.status == 409) {
+            var data = await response.text();   // for res.send()
+            alert(data);
+        } else {
+            alert(response.statusText);
+        }
+
+    };
+
+</script> -->

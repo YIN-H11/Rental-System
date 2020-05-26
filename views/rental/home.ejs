@@ -1,0 +1,111 @@
+<div class="container">
+
+        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+                <% if(req.session.role=="admin"){ %>
+    
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link  active" href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="/rental/create">Create</a>
+                        <a class="nav-item nav-link" href="/rental/search">Search</a>
+                        <a class="nav-item nav-link " href="/rental/admin">Admin</a>
+                    </div>
+                </div>
+    
+                <%} else if(req.session.role=="client"){%>
+    
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="/rental/search">Search</a>
+                        <a class="nav-item nav-link" href="/user/myrental">Myrental</a>
+                    </div>
+                </div>
+    
+                <%} else {%>
+    
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link " href="/rental/home">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="/rental/search">Search</a>
+    
+                    </div>
+                </div>
+    
+                <%} %>
+                <% if(!req.session.username){ %>
+                <div>
+                    <a class="nav-item" href="/user/login">Sign In</a>
+                </div>
+                <%}else{%>
+                Hi,<%=req.session.username %>
+                <div>
+                    <form action="/user/logout" method="POST">
+                        <button type="submit" class="btn btn-light">logout</button>
+                    </form>
+                </div>
+                <% } %>
+            </nav>
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Real Estate Rental System</h1>
+            <p class="lead">Real Estate Rental Management System is a web-based system to facilitate and finding
+                roomates.</p>
+        </div>
+    </div>
+
+
+    <div class="row ">
+        <!--01 -->
+
+        <% rental.forEach( function(rental) { %>
+        <div class="card col-md-6 col-xs-12 px-4">
+            <h4 class="text-primary"><a href="/rental/detail/<%= rental.id %>">
+                    <%= rental.propertytitle %></a>
+            </h4>
+            <div class="row no-gutters">
+                <!-- <div class="col-4"> -->
+                <img src="<%= rental.ImageURL %>" class="card-img col-4 pr-4" alt="Responsive image"
+                    style="object-fit: cover;height: 146.4px;">
+                <!-- </div> -->
+                <div class="col-8">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row ">Estate:<%= rental.Estate %></th>
+
+                            </tr>
+
+                            <tr>
+                                <th scope="row">Gross Area:<%= rental.CrossArea %></th>
+
+                            </tr>
+
+                            <tr>
+                                <th scope="row">Rent:$<%= rental.Rent %></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+         <% }); %>
+       
+
+<!-- 
+<script>
+    $(document).ready(function () {
+
+        sign();
+
+    });
+    function sign() {
+
+        if (res.redirect()) {
+            document.getElementById("div01").innerHTML = "Hi";
+        } 
+
+    }
+</script> -->
